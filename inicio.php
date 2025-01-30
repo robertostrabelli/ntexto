@@ -1,5 +1,6 @@
 <?php
 // baseado em https://github.com/razier/Littlechief
+// icons https://iconscout.com/
 require '3-protect.php';
 date_default_timezone_set("America/Sao_Paulo");
 
@@ -69,22 +70,23 @@ function editor() {
     }
     xhtml_head(true);
     ?>
-    <span class="menulink"><a href="inicio.php">Arquivos</a> 
-    <a href="?do=editor&action=create" id="but_create">Novo</a> 
-    <a href="" accesskey="s" id="but_save">Salvar</a> 
-    <a onClick="return confirm('TEM CERTEZA QUE QUER DESFAZER?')" href="" accesskey="r" id="but_revert">Desfazer</a> 
-    <a href="?do=editor&action=download&file=<?php echo $_GET['file']; ?>" accesskey="d">Baixar</a> 
-    <a href="#" id="but_print">Imprimir</a> 
-    <a onClick="return confirm('APAGAR TEXTO?')" href="?do=editor&action=delete&file=<?php echo urlencode($filename); ?>" id="but_delete">Excluir</a>
-    <a href="logout.php">Sair</a></span><br><br>
-    <span class="nomedoarquivo" id="nomedoarquivo"><?php echo htmlspecialchars($filename); ?></span>
-    <br><br>
+    <div class="menulink"><img src="assets/img/nTexto.png" alt="nTexto"> <a href="inicio.php"><img src="assets/img/folder.png" alt="Arquivos"></a>
+        <a href="?do=editor&action=create" id="but_create"><img src="assets/img/new.png" alt="Novo"></a>
+        <a href="" accesskey="s" id="but_save"><img src="assets/img/save.png" alt="Salvar"></a>
+        <a onClick="return confirm('TEM CERTEZA QUE QUER DESFAZER?')" href="" accesskey="r" id="but_revert"><img src="assets/img/undo.png" alt="Desfazer"></a>
+        <a href="?do=editor&action=download&file=<?php echo $_GET['file']; ?>" accesskey="d"><img src="assets/img/download.png" alt="Baixar"></a>
+        <a href="#" id="but_print"><img src="assets/img/print.png" alt="Imprimir"></a>
+        <a onClick="return confirm('APAGAR TEXTO?')" href="?do=editor&action=delete&file=<?php echo urlencode($filename); ?>" id="but_delete"><img src="assets/img/delete.png" alt="Excluir"></a>
+        <a href="logout.php"><img src="assets/img/exit.png" alt="Sair"></a>
+</div>
+    <div class="nomedoarquivo" id="nomedoarquivo"><?php echo htmlspecialchars($filename); ?></div>
+    
     <textarea id="code" name="code" class="editor" autofocus></textarea>   
     <div id="message"></div>
     
     <script>
-        let editor;
-        let docdata = "";
+        var editor;
+        var docdata = "";
 
         document.addEventListener("DOMContentLoaded", function() {
             bind();
@@ -97,9 +99,8 @@ function editor() {
                 mode: "application/x-httpd-php",
                 indentUnit: 4,
                 indentWithTabs: true,
-                tabMode: "shift",
                 lineWrapping: true,
-            });            
+            });
 
             loadDoc('<?php echo htmlspecialchars($filename, ENT_QUOTES); ?>');
 
@@ -113,74 +114,56 @@ function editor() {
                 loadDoc('<?php echo htmlspecialchars($filename, ENT_QUOTES); ?>');
             });
 
-            window.addEventListener("beforeunload", function() {
+            window.onbeforeunload = function() {
                 if (docdata !== editor.getValue()) {
                     return "Existem mudanças para serem salvas.";
                 }
+            };
+
+            document.getElementById("but_print").addEventListener("click", function(e) {
+                e.preventDefault();
+                window.print();
             });
-
-            document.getElementById("but_print").addEventListener("click", function (e) {
-    e.preventDefault();
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-        const content = editor.getValue();
-        const filename = "<?php echo htmlspecialchars($filename, ENT_QUOTES); ?>";
-        const formattedContent = content.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
-        
-        printWindow.document.write(`
-            <html>
-                <head>
-                    <title>${filename}</title>                    
-                </head>
-                <body>
-                    <p><b>${filename}</b></p>
-                    <div>${formattedContent}</div>
-                </body>
-            </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
-    } else {
-        alert("Não foi possível abrir a janela de impressão. Verifique as configurações do navegador.");
-    }
-});
-
         }
 
-        async function loadDoc(filename) {
-            const url = '<?php echo htmlspecialchars($editorfilename, ENT_QUOTES); ?>?do=editor&action=load&file=' + encodeURIComponent(filename);
+        function loadDoc(filename) {
+            var url = '<?php echo htmlspecialchars($editorfilename, ENT_QUOTES); ?>?do=editor&action=load&file=' + encodeURIComponent(filename);
             setMessage("Carregando...");
-            try {
-                const response = await fetch(url);
-                const text = await response.text();
-                editor.setValue(text);
-                docdata = editor.getValue();
-                setMessage("");
-            } catch (error) {
-                setMessage("Erro ao carregar arquivo.");
-                console.error(error);
-            }
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        editor.setValue(xhr.responseText);
+                        docdata = editor.getValue();
+                        setMessage("");
+                    } else {
+                        setMessage("Erro ao carregar arquivo.");
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.send();
         }
 
-        async function saveDoc(filename, value) {
-            const url = '<?php echo htmlspecialchars($editorfilename, ENT_QUOTES); ?>?do=editor&action=save&file=' + encodeURIComponent(filename);
+        function saveDoc(filename, value) {
+            var url = '<?php echo htmlspecialchars($editorfilename, ENT_QUOTES); ?>?do=editor&action=save&file=' + encodeURIComponent(filename);
             setMessage("Salvando...");
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams({ data: value }),
-                });
-                if (response.ok) {
-                    docdata = editor.getValue();
-                    setMessage("Salvo com sucesso.");
-                } else {
-                    setMessage("Erro ao salvar.");
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        docdata = editor.getValue();
+                        setMessage("Salvo com sucesso.");
+                    } else {
+                        setMessage("Erro ao salvar.");
+                        console.error(xhr.statusText);
+                    }
                 }
-            } catch (error) {
-                setMessage("Erro ao salvar.");
-                console.error(error);
-            }
+            };
+            xhr.send('data=' + encodeURIComponent(value));
         }
 
         function setMessage(msg) {
@@ -211,8 +194,16 @@ function browser() {
 
     xhtml_head();
     ?>
-    <span class="menulink"><a href="?do=editor&action=create" id="but_create">Novo</a></span><br><br>
-    <p>TEXTOS SALVOS</p>
+    <div class="menulink"><img src="assets/img/nTexto.png" alt="nTexto"> <a href="inicio.php"><img src="assets/img/folder.png" alt="Arquivos"></a>
+        <a href="?do=editor&action=create" id="but_create"><img src="assets/img/new.png" alt="Novo"></a>
+        <img class="inativo" src="assets/img/save.png" alt="Salvar">
+        <img class="inativo" src="assets/img/undo.png" alt="Desfazer">
+        <img class="inativo" src="assets/img/download.png" alt="Baixar">
+        <img class="inativo" src="assets/img/print.png" alt="Imprimir">
+        <img class="inativo" src="assets/img/delete.png" alt="Excluir">
+        <a href="logout.php"><img src="assets/img/exit.png" alt="Sair"></a>
+</div>
+<div class="nomedoarquivo"><p>TEXTOS SALVOS</p></div>
     <ul id="filebrowser">
         <?php foreach ($filelist as $file): ?>
             <li>
@@ -222,10 +213,9 @@ function browser() {
                     <span class="file-size"><?php echo format_bytes(filesize("./" . $file)); ?></span>
                 </a>
             </li>
-            
         <?php endforeach; ?>
     </ul><br><br>
-    <span class="menulink">&#x24B8; nTexto - github.com/robertostrabelli/ntexto</span>
+    <p>&#x24B8; nTexto - github.com/robertostrabelli/ntexto</p>
     <?php
     xhtml_foot();
 }
@@ -293,12 +283,11 @@ function xhtml_head($control = false) {
         <script src="assets/js/zepto.min.js"></script>       
     </head>
     <body>
-        <span class="ntexto"><b>nTexto</b></span>
-                <?php
-                if ($control) {
-                    xhtml_control();
-                }
-                ?>
+        <?php
+        if ($control) {
+            xhtml_control();
+        }
+        ?>
     <?php
 }
 
@@ -310,8 +299,8 @@ function xhtml_control() {
 
 function xhtml_foot() {
     ?>
-</body>
-</html>
-<?php
+    </body>
+    </html>
+    <?php
 }
 ?>
