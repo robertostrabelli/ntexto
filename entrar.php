@@ -2,10 +2,8 @@
 require '2-check.php';
 define('check', true);
 ?>
-
 <!DOCTYPE html>
-<html lang="en-US">
-
+<html lang="pt-BR">
 <head>
   <meta http-equiv="Content-Security-Policy" content="connect-src 'self'; font-src 'self'; frame-src 'self'; object-src 'none'; prefetch-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,23 +15,22 @@ define('check', true);
   <link rel="stylesheet" href="assets/css/style.css" type="text/css">
   <style>
 
+    body{font-size:150%;}
+
     div.login {
       padding: 10px;
       margin: auto;
-      max-width: 400px;
+      max-width: 500px;
       text-align: right;
     }
 
     div.login p.img {
-      text-align: center;
-      font-size:150%;
+      text-align: center;   
     }
 
     div.login p img {
       height: 48px;
     }
-
-    p{line-height:1.8;}
 
     p a.refresh-captcha img {
       height: 28px;
@@ -41,17 +38,33 @@ define('check', true);
 
     #bad-login {
       color: red;
-      font-size: 1.4em;
     }
-    fieldset{
-  border:1px solid darkred;
-  padding: 5px 10px;
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size:20px;
 }
-legend {
-  background-color: darkred;
-  padding: 5px 10px;
+
+input[type=submit] {  
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size:25px;
 }
-input {background-color: darkred;color: #0f0;}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
   </style>
 </head>
 
@@ -59,19 +72,17 @@ input {background-color: darkred;color: #0f0;}
   <div class="login">
     <p class="img">nTexto</p>
   <?php if (isset($failed)) { ?>
-      <p id="bad-login">Invalid captcha, user or password.</p>
+      <p id="bad-login">Usuário, senha ou captcha errado.</p>
     <?php } ?>
 
     <form id="login-form" method="post" target="_self">
-      <fieldset id="login">
-        <legend>Login</legend>
-        <p><label for="user">User <input type="text" id="user" name="user" required></label></p>
-        <p><label for="password">Password <input type="password" id="password" name="password" required></label></p>
-        <p><label for="captcha">Write the letters <input type="text" id="captcha" name="captcha_challenge" pattern="[A-Z]{6}"></label></p>
-         <p><img src="captcha.php" alt="CAPTCHA" class="captcha-image"> <a href="#" class="refresh-captcha"><img src="reload.png" alt="refresh"></a></p>
 
-          <input type="submit" value="Login">
-      </fieldset>
+        <p><input placeholder="Usuário" type="text" id="user" name="user" required></p>
+        <p><input placeholder="Senha" type="password" id="password" name="password" required></p>
+        <p><input placeholder="Escreva as letras maiúsculas" type="text" id="captcha" name="captcha_challenge" pattern="[A-Z]{6}"></p>
+         <p><img src="captcha.php" alt="CAPTCHA" class="captcha-image"> <a href="#" class="refresh-captcha"><img src="assets/img/reload.png" alt="refresh"></a></p>
+
+         <p><input type="submit" value="Entrar"></p>
     </form>
   </div>
 
