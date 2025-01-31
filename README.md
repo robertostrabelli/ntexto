@@ -1,7 +1,9 @@
 # nTexto
 Um pequeno editor de texto puro feito em php para rodar num servidor web.
 
-<img src="ss.png" alt="screenshot">
+<img width="300px" src="ss1.png" alt="screenshot">
+<img width="300px" src="ss2.png" alt="screenshot">
+<img width="300px" src="ss3.png" alt="screenshot">
 
 ## Motivo
 Eu queria um editor de textos de rascunho na nuvem que funcionasse com qualquer coisa que acessasse a internet.
