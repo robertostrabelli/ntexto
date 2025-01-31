@@ -1,4 +1,4 @@
-# ntexto
+# nTexto
 Um pequeno editor de texto feito em php para rodar num servidor web
 
 <img src="ss.png" alt="screenshot">
