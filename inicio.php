@@ -299,6 +299,27 @@ function xhtml_control() {
 
 function xhtml_foot() {
     ?>
+    <div id="word-counter">
+    <span id="char-count">C: 0</span> | 
+    <span id="word-count">P: 0</span>
+</div>
+
+<script>
+    function updateWordCount() {
+        let text = editor.getValue();
+        let charCount = text.length;
+        let wordCount = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+        
+        document.getElementById("char-count").textContent = "Caracteres: " + charCount;
+        document.getElementById("word-count").textContent = "Palavras: " + wordCount;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        editor.on("change", updateWordCount);
+        updateWordCount(); // Atualiza na inicialização
+    });
+</script>
+
     </body>
     </html>
     <?php
