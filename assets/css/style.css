@@ -309,9 +309,10 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 
 @media print {
   /* Hide the cursor when printing */
-  .CodeMirror div.CodeMirror-cursor {
-    visibility: hidden;
+  .CodeMirror div.CodeMirror-cursor,.CodeMirror-linenumber, .menulink, #word-counter {
+    visibility: hidden;display:none;
   }
+  .CodeMirror, body{color:#222;font-size: inherit;}
 }
 
 
@@ -362,38 +363,38 @@ body {
  }
 
  .menulink {
-  background-color:lightgray;
+  background-color:#0f0;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 999;
   width: 100%;
-  height: 41px;
+  height: 34px;
   vertical-align: middle;
 }
  .nomedoarquivo {
-  font-size:125%;
   padding-left:5px;
   padding-right:5px;
   padding-top:2px;
-  line-height:1.8;
-  color: rgb(238, 238, 238);
+  line-height:1.8;  
   margin-top: 42px;
 }
+
+.nomedoarquivo span {background-color:#0f0;color:#222;border-radius: 4px;}
 
 #word-counter {
   position: fixed; 
   bottom: 2px; 
   left: 24px; 
-  color: rgb(148, 148, 148);
-  padding: 5px 10px; 
-  border-radius: 5px;
+  color: #222;
+  padding: 2px 4px; 
+  border-radius: 4px;
+  background-color:#0f0
 }
 
-.menulink img {border:1px solid darkgray;width:34px;margin:3px 0 4px 0;}
-.inativo {background-color:rgb(73, 73, 73);}
+.menulink img {width:28px;margin:3px 0 4px 0;}
 
-a{text-decoration: none;color: rgb(255, 208, 0);}
+a{text-decoration: none;color:#0f0}
 
 .editor{
 	width:100%;
@@ -413,7 +414,7 @@ a{text-decoration: none;color: rgb(255, 208, 0);}
 
 #message{
 	line-height:46px;
-	color:#f00;
+	color: #0f0;
 	font-size:14px;
 	font-weight:bold;
 }
