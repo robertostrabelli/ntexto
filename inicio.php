@@ -79,7 +79,7 @@ function editor() {
         <a onClick="return confirm('APAGAR TEXTO?')" href="?do=editor&action=delete&file=<?php echo urlencode($filename); ?>" id="but_delete"><img src="assets/img/delete.png" alt="Excluir"></a>
         <a href="logout.php"><img src="assets/img/exit.png" alt="Sair"></a>
 </div>
-    <div class="nomedoarquivo" id="nomedoarquivo"><?php echo htmlspecialchars($filename); ?></div>
+    <div class="nomedoarquivo" id="nomedoarquivo"><span><?php echo htmlspecialchars($filename); ?></span></div>
     
     <textarea id="code" name="code" class="editor" autofocus></textarea>   
     <div id="message"></div>
@@ -196,14 +196,15 @@ function browser() {
     ?>
     <div class="menulink"><img src="assets/img/nTexto.png" alt="nTexto"> <a href="inicio.php"><img src="assets/img/folder.png" alt="Arquivos"></a>
         <a href="?do=editor&action=create" id="but_create"><img src="assets/img/new.png" alt="Novo"></a>
-        <img class="inativo" src="assets/img/save.png" alt="Salvar">
-        <img class="inativo" src="assets/img/undo.png" alt="Desfazer">
-        <img class="inativo" src="assets/img/download.png" alt="Baixar">
-        <img class="inativo" src="assets/img/print.png" alt="Imprimir">
-        <img class="inativo" src="assets/img/delete.png" alt="Excluir">
+        <img src="assets/img/savei.png" alt="Salvar">
+        <img src="assets/img/undoi.png" alt="Desfazer">
+        <img src="assets/img/downloadi.png" alt="Baixar">
+        <img src="assets/img/printi.png" alt="Imprimir">
+        <img src="assets/img/deletei.png" alt="Excluir">
         <a href="logout.php"><img src="assets/img/exit.png" alt="Sair"></a>
 </div>
-<div class="nomedoarquivo"><p>TEXTOS SALVOS</p></div>
+
+<div class="nomedoarquivo"><span>Textos Salvos</span></div>
     <ul id="filebrowser">
         <?php foreach ($filelist as $file): ?>
             <li>
@@ -310,8 +311,8 @@ function xhtml_foot() {
         let charCount = text.length;
         let wordCount = text.trim().split(/\s+/).filter(word => word.length > 0).length;
         
-        document.getElementById("char-count").textContent = "Caracteres: " + charCount;
-        document.getElementById("word-count").textContent = "Palavras: " + wordCount;
+        document.getElementById("char-count").textContent = "C: " + charCount;
+        document.getElementById("word-count").textContent = "P: " + wordCount;
     }
 
     document.addEventListener("DOMContentLoaded", function() {
